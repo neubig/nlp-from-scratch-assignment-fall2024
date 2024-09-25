@@ -31,7 +31,7 @@ All deliverables are due by **Tuesday, October 22nd**. This is a group assignmen
 
 ## Task: Retrieval Augmented Generation (RAG)
 
-You'll be working on the task of factual question-answering (QA). We will focus specifically on questions about various facts concerning LTI and CMU. Since existing QA systems might not have the necessary knowledge in this domain, you will need to augment each question with relevant documents. Given an input question, your system will first retrieve documents and use those documents to generate an answer.
+You'll be working on the task of factual question-answering (QA). We will focus specifically on questions about various facts concerning Pittsburgh and CMU. Since existing QA systems might not have the necessary knowledge in this domain, you will need to augment each question with relevant documents. Given an input question, your system will first retrieve documents and use those documents to generate an answer.
 
 ### Data Format
 
@@ -70,11 +70,10 @@ For your test set and the RAG systems, you will first need to compile a knowledg
 
 ### Collecting raw data
 
-Your knowledge resource might include a mix of HTML pages, PDFs, and plain text documents. You will need to clean this data and convert it into a file format that suites your model development. Here are some tools that you could use,
+Your knowledge resource might include a mix of HTML pages, PDFs, and plain text documents. You will need to clean this data and convert it into a file format that suites your model development. Here are some tools that you could use:
 
-+ For all things related to published research, you can use the [Semantic Scholar API](https://www.semanticscholar.org/product/api) to collect papers and their metadata.
-+ To parse PDF documents into plain text, you can use [pypdf](https://github.com/py-pdf/pypdf) or [pdfplumber](https://github.com/jsvine/pdfplumber).
 + To process HTML pages, you can use [beautifulsoup4](https://pypi.org/project/beautifulsoup4/).
++ To parse PDF documents into plain text, you can use [pypdf](https://github.com/py-pdf/pypdf) or [pdfplumber](https://github.com/jsvine/pdfplumber).
 
 By the end of this step, you will have a collection of documents that will serve as the knowledge resource for your RAG system.
 
@@ -86,7 +85,7 @@ Next, you will want to annotate question-answer pairs for two purposes: testing/
 
 The testing (and analysis) data will be the data that you use to make sure that your system is working properly. In order to do so, you will want to annotate enough data so that you can get an accurate estimate of how your system is doing, and if any improvements to your system are having a positive impact. Some guidelines on this,
 
-+ *Domain Relevance*: Your test data should be similar to the data that you will finally be tested on (questions about LTI and CMU). Use the knowledge resources mentioned above to curate your test set.
++ *Domain Relevance*: Your test data should be similar to the data that you will finally be tested on (questions about Pittsburgh and CMU). Use the knowledge resources mentioned above to curate your test set.
 + *Diversity*: Your test data should cover a wide range of questions Pittsburgh and CMU.
 + *Size*: Your test data should be large enough to distinguish between good and bad models. If you want some guidelines about this, see the lecture on experimental design and human annotation.[^2]
 + *Quality*: Your test data should be of high quality. We recommend that you annotate it yourself and validate your annotations within your team.
@@ -152,7 +151,7 @@ Finally, you will run your systems on our test set (questions only) and submit y
 
 ### Unseen test set
 
-This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about LTI and CMU. Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
+This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about Pittsburgh and CMU. Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
 
 ### Evaluation metrics
 
