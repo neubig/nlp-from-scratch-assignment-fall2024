@@ -55,7 +55,7 @@ For your test set and the RAG systems, you will first need to compile a knowledg
     - [Encyclopedia Brittanica page](https://www.britannica.com/place/Pittsburgh)
     - [Visit Pittsburgh webpage](https://www.visitpittsburgh.com): This website also contains subpages that would be useful for other topics (see below), like events, sports, music, food, etc.
     - [About CMU & CMU History](https://www.cmu.edu/about/)
-+ Events in Pittsburgh and CMU (We will only ask about annual/recurring events and events happening **after** October 22.)
++ Events in Pittsburgh and CMU (We will only ask about annual/recurring events and events happening **after** October 27.)
     - [Pittsburgh events calendar](https://pittsburgh.events): Navigate to month-specific pages for easier scraping
     - [Downtown Pittsburgh events calendar](https://downtownpittsburgh.com/events/)
     - [Pittsburgh City Paper events](https://www.pghcitypaper.com/pittsburgh/EventSearch?v=d)
