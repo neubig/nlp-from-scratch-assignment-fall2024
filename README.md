@@ -1,10 +1,16 @@
 # CMU Advanced NLP Assignment 2: End-to-end NLP System Building
 
-Large language models (LLMs) such as Llama2 have been shown effective for question-answering ([Touvron et al., 2023](https://arxiv.org/abs/2307.09288)), however, they are often limited by their knowledge in certain domains. A common technique here is to augment LLM's knowledge with documents that are relevant to the question. In this assignment, you will *develop a retrieval augmented generation system (RAG)* ([Lewis et al., 2021](https://arxiv.org/abs/2005.11401)) that's capable of answering questions about the [Language Technology Institute](https://lti.cs.cmu.edu) (LTI) and [Carnegie Mellon University](https://www.cmu.edu) (CMU).
+Large language models (LLMs) such as Llama2 have been shown effective for question-answering ([Touvron et al., 2023](https://arxiv.org/abs/2307.09288)), however, they are often limited by their knowledge in certain domains. A common technique here is to augment LLM's knowledge with documents that are relevant to the question. In this assignment, you will *develop a retrieval augmented generation system (RAG)* ([Lewis et al., 2021](https://arxiv.org/abs/2005.11401)) that's capable of answering questions about Pittsburgh and CMU, including history, culture, trivia, and upcoming events.
 
 ```
-Q: Who is offering the Advanced NLP course in Spring 2024?
-A: Graham Neubig
+Q: Who is Pittsburgh named after?
+A: William Pitt
+
+Q: What famous machine learning venue had its first conference in Pittsburgh in 1980?
+A: ICML
+
+Q: What musical artist is performing at PPG Arena on October 13?
+A: Billie Eilish
 ```
 
 So far in your machine learning classes, you may have experimented with standardized tasks and datasets that were easily accessible. However, in the real world, NLP practitioners often have to solve a problem from scratch (like this one!). This includes gathering and cleaning data, annotating your data, choosing a model, iterating on the model, and possibly going back to change your data. In this assignment, you'll get to experience this full process.
@@ -21,7 +27,7 @@ The key checkpoints for this assignment are,
 - [ ] [Write a report](#writing-report)
 - [ ] [Submit your work](#submission--grading)
 
-All deliverables are due by **Tuesday, March 12th**. This is a group assignment, see the assignment policies for this class.[^1]
+All deliverables are due by **Tuesday, October 22nd**. This is a group assignment, see the assignment policies for this class.[^1]
 
 ## Task: Retrieval Augmented Generation (RAG)
 
@@ -41,26 +47,26 @@ Read our [model and data policy](#model-and-data-policy) for this assignment.
 
 ### Compiling a knowledge resource
 
-For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the following,
+For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the following:
 
-+ Faculty @ LTI
-    - List of faculty ([LTI faculty directory](https://lti.cs.cmu.edu/people/faculty/index.html)). Limit to "Core Faculty" for this assignment.
-    - Research papers by LTI faculty and their metadata ([Semantic Scholar API](https://www.semanticscholar.org/product/api)). Limit your resource to open access papers published in 2023. Include both the paper and its metadata. You can limit the metadata to title, abstract, authors, publication venue, year and tldr. 
-    - Teaching (see below)
-+ Courses @ CMU
-    - Courses offered by each department at CMU and their metadata such as instructors, locations, and credits. ([Schedule of Classes](https://enr-apps.as.cmu.edu/open/SOC/SOCServlet/completeSchedule))
-    - Academic calendars for 2023-2024 and 2024-2025 ([CMU calendar](https://www.cmu.edu/hub/calendar/))
-+ Academics @ LTI
-    - Programs offered by LTI ([website](https://lti.cs.cmu.edu/academics/index.html)). Navigate to individual program webpages to find program overview, requirements and curriculum etc.,
-    - Program handbooks for information on curriculum, requirements and staff ([PhD](https://lti.cs.cmu.edu/academics/phd-programs/files/handbook_phd_2023-2024.pdf), [MLT](https://lti.cs.cmu.edu/academics/masters-programs/files/mlt-student-handbook-2023-2024.pdf), [MIIS](https://lti.cs.cmu.edu/academics/masters-programs/files/miis-handbook_2023-2024.pdf), [MCDS](https://lti.cs.cmu.edu/academics/masters-programs/files/mcds-student-handbook-2023_2024.pdf), [MSAII](https://lti.cs.cmu.edu/academics/masters-programs/files/handbook-msaii-2022-2023.pdf))
-+ Events @ CMU
-    - Spring carnival and reunion weekend 2024 ([schedule](https://web.cvent.com/event/ab7f7aba-4e7c-4637-a1fc-dd1f608702c4/websitePage:645d57e4-75eb-4769-b2c0-f201a0bfc6ce?locale=en))
-    - Commencement 2024 ([schedule](https://www.cmu.edu/commencement/schedule/index.html))
-+ History @ SCS and CMU
-    - School of Computer Science ([25 great things](https://www.cs.cmu.edu/scs25/25things), [history](https://www.cs.cmu.edu/scs25/history))
-    - [CMU fact sheet](https://www.cmu.edu/about/cmu_fact_sheet_02.pdf) and [history](https://www.cmu.edu/about/history.html)
-    - Buggy and it's history ([article](https://www.cmu.edu/news/stories/archives/2019/april/spring-carnival-buggy.html))
-    - Athletics ([Tartans](https://athletics.cmu.edu/athletics/tartanfacts), [Scotty](https://athletics.cmu.edu/athletics/mascot/about), [Kiltie Band](https://athletics.cmu.edu/athletics/kiltieband/index))
++ General Info and History of Pittsburgh/CMU
+    - Wikipedia pages ([Pittsburgh](https://en.wikipedia.org/wiki/Pittsburgh), [History of Pittsburgh](https://en.wikipedia.org/wiki/History_of_Pittsburgh).
+    - [City of Pittsburgh webpage](https://pittsburghpa.gov/index.html)
+    - ([Encyclopedia Brittanica page](https://www.britannica.com/place/Pittsburgh)
+    - [Visit Pittsburgh webpage](https://www.visitpittsburgh.com): This website also contains subpages that would be useful for other topics (see below), like events, sports, music, food, etc.
+    - [About CMU & CMU History](https://www.cmu.edu/about/)
++ Events in Pittsburgh and CMU (We will only ask about annual/recurring events and events happening **after** October 22.)
+    - [Pittsburgh events calendar](https://pittsburgh.events): Navigate to month-specific pages for easier scraping
+    - [Downtown Pittsburgh events calendar](https://downtownpittsburgh.com/events/)
+    - [Pittsburgh City Paper events](https://www.pghcitypaper.com/pittsburgh/EventSearch?v=d)
+    - [CMU events calendar](https://events.cmu.edu)
++ Music and Culture (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each)
+    - Pittsburgh [Symphony](https://www.pittsburghsymphony.org), [Opera](https://pittsburghopera.org), and [Cultural Trust](https://trustarts.org)
+    - Pittsburgh Museums ([Carnegie Museums](https://carnegiemuseums.org), [Heinz History Center](https://www.heinzhistorycenter.org)), [The Frick](https://www.thefrickpittsburgh.org), and [more](https://en.wikipedia.org/wiki/List_of_museums_in_Pittsburgh))
+    - [Food Festivals](https://www.visitpittsburgh.com/events-festivals/food-festivals/)
++ Sports (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each. Don't worry about scraping news/scores/recent stats from these sites.)
+    - General info ([Visit Pittsburgh](https://www.visitpittsburgh.com/things-to-do/pittsburgh-sports-teams/))
+    - Pittsburgh [Pirates](https://www.mlb.com/pirates), [Steelers](https://www.steelers.com), and [Penguins](https://www.nhl.com/penguins/)
 
 ### Collecting raw data
 
@@ -81,7 +87,7 @@ Next, you will want to annotate question-answer pairs for two purposes: testing/
 The testing (and analysis) data will be the data that you use to make sure that your system is working properly. In order to do so, you will want to annotate enough data so that you can get an accurate estimate of how your system is doing, and if any improvements to your system are having a positive impact. Some guidelines on this,
 
 + *Domain Relevance*: Your test data should be similar to the data that you will finally be tested on (questions about LTI and CMU). Use the knowledge resources mentioned above to curate your test set.
-+ *Diversity*: Your test data should cover a wide range of questions about LTI and CMU.
++ *Diversity*: Your test data should cover a wide range of questions Pittsburgh and CMU.
 + *Size*: Your test data should be large enough to distinguish between good and bad models. If you want some guidelines about this, see the lecture on experimental design and human annotation.[^2]
 + *Quality*: Your test data should be of high quality. We recommend that you annotate it yourself and validate your annotations within your team.
 
@@ -90,11 +96,11 @@ To help you get started, here are some example questions,
 + Questions that could be answered by just prompting a LLM
     - When was Carnegie Mellon University founded?
 + Questions that can be better answered by augmenting LLM with relevant documents
-    - Who is the president of CMU?
+    - What is the name of the annual pickle festival held in Pittsburgh?
 + Questions that are likely answered only through augmentation
-    - What courses are offered by Graham Neubig at CMU?
+    - When was the Pittsburgh Soul Food Festival established?
 + Questions that are sensitive to temporal signals
-    - Who is teaching 11-711 in Spring 2024?
+    - Who is performing at X venue on Y date?
 
 See [Vu et al., 2023](https://arxiv.org/abs/2310.03214) for ideas about questions to prompt LLMs. For questions with multiple valid answers, you can include multiple reference answers per line in `reference_answers.txt` (separated by a semicolon `;`). As long as your system generates one of the valid answers, it will be considered correct.
 
@@ -133,7 +139,7 @@ To get started, you can try langchain's RAG stack that utilizes GPT4All, Chroma 
 
 Some additional resources that could be useful,
 
-+ [11711 lecture notes](http://www.phontron.com/class/anlp2024/lectures/#retrieval-and-rag-feb-15)
++ [11711 lecture notes]([http://www.phontron.com/class/anlp2024/lectures/#retrieval-and-rag-feb-15](http://www.phontron.com/class/anlp-fall2024/assets/slides/anlp-10-rag.pdf))
 + [ACL 2023 tutorial on retrieval-augmented LMs](https://acl2023-retrieval-lm.github.io)
 + [llama-recipes](https://github.com/facebookresearch/llama-recipes/tree/main/demo_apps/RAG_Chatbot_example) for an example RAG chatbot with Llama2.
 + [Ollama](https://github.com/ollama/ollama) or [llama.cpp](https://github.com/ggerganov/llama.cpp) to run LLMs locally on your machine.
@@ -235,7 +241,7 @@ If you have any questions about whether a model or data is allowed, please ask o
 
 ## Acknowledgements
 
-This assignment was based on the the [Fall 2023 version of this assignment](https://github.com/cmu-anlp/nlp-from-scratch-assignment-2023/tree/main).
+This assignment was based on the the [Spring 2024 version of this assignment](https://github.com/neubig/nlp-from-scratch-assignment-spring2024).
 
 ## References
 
