@@ -147,7 +147,7 @@ All the code for your data preprocessing, model development and evaluation will 
 
 ## Generating results
 
-Finally, you will run your systems on our test set (questions only) and submit your results to us. This test set will be released on **Monday, March 11th**.
+Finally, you will run your systems on our test set (questions only) and submit your results to us. This test set will be released the day before the assignment is due (**Monday, October 21st**).
 
 ### Unseen test set
 
