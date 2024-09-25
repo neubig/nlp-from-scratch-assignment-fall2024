@@ -50,9 +50,9 @@ Read our [model and data policy](#model-and-data-policy) for this assignment.
 For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the following:
 
 + General Info and History of Pittsburgh/CMU
-    - Wikipedia pages ([Pittsburgh](https://en.wikipedia.org/wiki/Pittsburgh), [History of Pittsburgh](https://en.wikipedia.org/wiki/History_of_Pittsburgh).
+    - Wikipedia pages ([Pittsburgh](https://en.wikipedia.org/wiki/Pittsburgh), [History of Pittsburgh](https://en.wikipedia.org/wiki/History_of_Pittsburgh)).
     - [City of Pittsburgh webpage](https://pittsburghpa.gov/index.html)
-    - ([Encyclopedia Brittanica page](https://www.britannica.com/place/Pittsburgh)
+    - [Encyclopedia Brittanica page](https://www.britannica.com/place/Pittsburgh)
     - [Visit Pittsburgh webpage](https://www.visitpittsburgh.com): This website also contains subpages that would be useful for other topics (see below), like events, sports, music, food, etc.
     - [About CMU & CMU History](https://www.cmu.edu/about/)
 + Events in Pittsburgh and CMU (We will only ask about annual/recurring events and events happening **after** October 22.)
