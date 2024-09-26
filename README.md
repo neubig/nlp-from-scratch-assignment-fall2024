@@ -47,7 +47,7 @@ Read our [model and data policy](#model-and-data-policy) for this assignment.
 
 ### Compiling a knowledge resource
 
-For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the following:
+For your test set and the RAG systems, you will first need to compile a knowledge resource of relevant documents. You are free to use any publicly available resource, but we *highly recommend* including the websites below. Note that we can also ask you questions from relevant subpages (e.g. "about", "schedule", "history", "upcoming events", "vendors", etc.) from these websites:
 
 + General Info and History of Pittsburgh/CMU
     - Wikipedia pages ([Pittsburgh](https://en.wikipedia.org/wiki/Pittsburgh), [History of Pittsburgh](https://en.wikipedia.org/wiki/History_of_Pittsburgh)).
@@ -61,11 +61,17 @@ For your test set and the RAG systems, you will first need to compile a knowledg
     - [Pittsburgh events calendar](https://pittsburgh.events): Navigate to month-specific pages for easier scraping
     - [Downtown Pittsburgh events calendar](https://downtownpittsburgh.com/events/)
     - [Pittsburgh City Paper events](https://www.pghcitypaper.com/pittsburgh/EventSearch?v=d)
-    - [CMU events calendar](https://events.cmu.edu)
+    - [CMU events calendar](https://events.cmu.edu) and [campus events page](https://www.cmu.edu/engage/alumni/events/campus/index.html)
 + Music and Culture (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each)
     - Pittsburgh [Symphony](https://www.pittsburghsymphony.org), [Opera](https://pittsburghopera.org), and [Cultural Trust](https://trustarts.org)
     - Pittsburgh Museums ([Carnegie Museums](https://carnegiemuseums.org), [Heinz History Center](https://www.heinzhistorycenter.org)), [The Frick](https://www.thefrickpittsburgh.org), and [more](https://en.wikipedia.org/wiki/List_of_museums_in_Pittsburgh))
-    - [Food Festivals](https://www.visitpittsburgh.com/events-festivals/food-festivals/)
+    - Food-related events 
+        - [Food Festivals](https://www.visitpittsburgh.com/events-festivals/food-festivals/)
+        - [Picklesburgh](https://www.picklesburgh.com/)
+        - [Pittsburgh Taco Fest](https://www.pghtacofest.com/)
+        - [Pittsburgh Restaurant Week](https://pittsburghrestaurantweek.com/)
+        - [Little Italy Days](https://littleitalydays.com)
+        - [Banana Split Fest](https://bananasplitfest.com)
 + Sports (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each. Don't worry about scraping news/scores/recent stats from these sites.)
     - General info ([Visit Pittsburgh](https://www.visitpittsburgh.com/things-to-do/pittsburgh-sports-teams/))
     - Pittsburgh [Pirates](https://www.mlb.com/pirates), [Steelers](https://www.steelers.com), and [Penguins](https://www.nhl.com/penguins/)
