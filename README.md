@@ -62,7 +62,7 @@ For your test set and the RAG systems, you will first need to compile a knowledg
     - [Downtown Pittsburgh events calendar](https://downtownpittsburgh.com/events/)
     - [Pittsburgh City Paper events](https://www.pghcitypaper.com/pittsburgh/EventSearch?v=d)
     - [CMU events calendar](https://events.cmu.edu) and [campus events page](https://www.cmu.edu/engage/alumni/events/campus/index.html)
-+ Music and Culture (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each)
++ Music and Culture (Note that many of these pages also contain upcoming events, also see Wikipedia pages for each.)
     - Pittsburgh [Symphony](https://www.pittsburghsymphony.org), [Opera](https://pittsburghopera.org), and [Cultural Trust](https://trustarts.org)
     - Pittsburgh Museums ([Carnegie Museums](https://carnegiemuseums.org), [Heinz History Center](https://www.heinzhistorycenter.org)), [The Frick](https://www.thefrickpittsburgh.org), and [more](https://en.wikipedia.org/wiki/List_of_museums_in_Pittsburgh))
     - Food-related events 
