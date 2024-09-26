@@ -142,7 +142,7 @@ For your RAG system, you will need the following three components, 
 2. Document retriever
 3. Document reader (aka. question-answering system)
 
-To get started, you can try langchain's RAG stack that utilizes GPT4All, Chroma and Llama2 ([langchain docs](https://python.langchain.com/docs/use_cases/question_answering/local_retrieval_qa)).
+To get started, you can try [langchain's RAG stack](https://python.langchain.com/docs/use_cases/question_answering/local_retrieval_qa) that utilizes GPT4All, Chroma and Llama2, as well as [LlamaIndex](https://docs.llamaindex.ai/en/stable/use_cases/q_and_a/).
 
 Some additional resources that could be useful,
 
