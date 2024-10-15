@@ -20,6 +20,12 @@ def get(url : str):
         content_type = res.headers['Content-Type'].split(';')[0]
         return res.text, content_type
 
+def wiki_cleaner(soup : BeautifulSoup):
+    """
+    Specialized parser for cleaning up wikipedia articles
+    """
+    ...
+
 def parse_raw(raw_text, content_type='text/html'):
     match content_type:
         case 'text/html':
@@ -43,6 +49,33 @@ def generate_questions(document : str):
     Inputs:
         document : str, a markdown or plaintext document to search over
     """
+    # TODO migrate to personal gradio space
+    # from gradio_client import Client
+    from huggingface_hub import InferenceClient
+
+    messages = [
+        {"role": "system", "content": '''You are a quiz generation tool. When given a document, you will generate 10 question and answer pairs formatted as below:
+
+Q: Who is Pittsburgh named after?
+A: William Pitt
+
+Q: What famous machine learning venue had its first conference in Pittsburgh in 1980?
+A: ICML
+
+Q: What musical artist is performing at PPG Arena on October 13?
+A: Billie Eilish'''},
+        # TODO maybe format 
+        {"role": "user", "content": document},
+    ]
+    client = InferenceClient(api_key=os.getenv('HF_API_KEY'))
+
+    for message in client.chat_completion(
+	    model="meta-llama/Llama-3.1-70B-Instruct",
+	    messages=messages,
+	    max_tokens=500,
+	    stream=True,
+    ):
+        print(message.choices[0].delta.content, end="")
     ...
 
 if __name__ == "__main__":
@@ -55,7 +88,10 @@ if __name__ == "__main__":
         f.write(text)
 
     if args.get_questions:
-        generate_questions()
+        # Crucially, we will need to chunk the data
+        document = [parse_raw(text,content_type)]
+        for subsection in document:
+            generate_questions(subsection)
 
     with open('out.txt','w') as f:
         f.write(parse_raw(text,content_type))
