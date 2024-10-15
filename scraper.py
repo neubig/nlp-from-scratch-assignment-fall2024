@@ -97,14 +97,16 @@ A: Billie Eilish'''},
     ]
     client = InferenceClient(api_key=os.getenv('HF_API_KEY'))
 
+    out = []
     for message in client.chat_completion(
 	    model="meta-llama/Llama-3.2-11B-Vision-Instruct",
 	    messages=messages,
 	    max_tokens=500,
 	    stream=True,
     ):
-        print(message.choices[0].delta.content, end="")
-    ...
+        out.append(message.choices[0].delta.content)
+    print('Line finished',file=sys.stderr)
+    return ''.join(out)
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
@@ -119,13 +121,14 @@ if __name__ == "__main__":
         # Crucially, we will need to chunk the data
         document = parse_raw(text,content_type,chunk=True)
         for subsection in document:
-            with open('etc.out','a') as f:
-                print(subsection,file=f)
-                print('--------',file=f)
-            generate_questions(subsection)
+            with open('etc.out','a') as errf:
+                print(subsection,file=errf)
+                print('--------',file=errf)
+            with open('qs.txt','a') as outf:
+                print(generate_questions(subsection),file=outf)
 
     with open('out.txt','w') as f:
         f.write(parse_raw(text,content_type))
     
-    print('Execution complete!')
+    print('Execution complete!',file=sys.stderr)
     

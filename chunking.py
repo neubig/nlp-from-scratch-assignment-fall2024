@@ -31,7 +31,6 @@ class SoupCan:
         if self.current is None:
             raise StopIteration
 
-        # First, determine the 
         while self.current != self.body or self.current not in self.visited:
             #print('#',self.current)
             assert self.current is not None
@@ -51,26 +50,25 @@ class SoupCan:
                 continue
 
             # Merge consecutive elements that are too small
-            # TODO maybe make greedy
-            if self.count_tokens() <= self.max_tokens:
-                self.visited.add(self.current)
-                out_node = self.current
-                while self.count_tokens(out_node) < self.min_tokens and self.current.next_sibling is not None:
-                    self.current = self.current.next_sibling
-                    if self.count_tokens(self.current) > self.max_tokens:
-                        continue
-                    self.visited.add(self.current)
-                    out_node = BeautifulSoup(str(out_node)+'\n'+str(self.current),'html.parser')
-
-                if self.current.next_sibling is not None:
-                    self.current = self.current.next_sibling
-                elif self.count_tokens(out_node) < self.min_tokens:
-                    self.current = self.current.parent
+            self.visited.add(self.current)
+            out_node = self.current
+            while self.current.next_sibling is not None and self.count_tokens(out_node) + self.count_tokens(self.current.next_sibling) <= self.max_tokens:
+                self.current = self.current.next_sibling
+                if self.count_tokens(self.current) > self.max_tokens:
                     continue
-                else:
-                    self.current = self.current.parent
-                out = self.stringify(out_node)
-                return out
+                self.visited.add(self.current)
+                out_node = BeautifulSoup(str(out_node)+'\n'+str(self.current),'html.parser')
+
+            if self.current.next_sibling is not None:
+                self.current = self.current.next_sibling
+            else:
+                self.current = self.current.parent
+
+            # Ignore anything too small or trivial, like comments or whitespace
+            if self.count_tokens(out_node) < self.min_tokens:
+                continue
+            out = self.stringify(out_node)
+            return out
             
         self.current = None
         # This flag is for the language model to determine
