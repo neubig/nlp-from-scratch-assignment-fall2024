@@ -13,6 +13,27 @@ from chunking import *
 
 load_dotenv()
 
+prompt_context = "You are a quiz generation tool. When given a document, you will generate at most 10 question and answer pairs formatted as below. " + \
+    "The question should be about a verifiable fact, such as the name of a person, place, or event, a date of a historical or scheduled event, etc. " + \
+    "Answers should be concise, consisting of a few words at most. Do not generate questions which do not have a clear answer in the documents you have seen. " + \
+    "Do not generate questions about the document itself, such as \"When was the list of the 100 most populous cities of the United States last updated?\". " + \
+    "If you are unable to generate any suitable questions from the document, output `[NO DATA]` and quit." + \
+    "If a question has more than one possible answer, separate correct answers with a semicolon (`;`)." + \
+'''
+Here is the desired format:
+
+Q: Who is Pittsburgh named after?
+A: William Pitt
+
+Q: What famous machine learning venue had its first conference in Pittsburgh in 1980?
+A: ICML
+
+Q: What musical artist is performing at PPG Arena on October 13?
+A: Billie Eilish
+
+Q: What major league sports teams are based in Pittsburgh?
+A: Steelers;Penguins;Pirates'''
+
 def get(url : str) -> Tuple[str,str]:
     try:
         res = requests.get(url)
@@ -30,7 +51,7 @@ def wiki_cleaner(soup : BeautifulSoup):
     """
     ...
 
-def soup_chunker(body : BeautifulSoup) -> Iterator[str]:
+def soup_chunker(body : BeautifulSoup,chunkSize=8192) -> Iterator[str]:
     """
     Utility for chunking the main body of a webpage into sizeable chunks
     """
@@ -47,9 +68,9 @@ def soup_chunker(body : BeautifulSoup) -> Iterator[str]:
             out = out.replace('\n\n\n','\n\n')
         return out
 
-    return SoupCan(body,stringify=to_truncated_md)
+    return SoupCan(body,stringify=to_truncated_md,max_tokens=chunkSize)
 
-def parse_raw(raw_text, content_type='text/html', chunk=False) -> Optional[Iterator[str] | str]:
+def parse_raw(raw_text, content_type='text/html', chunk=False,**kwargs) -> Optional[Iterator[str] | str]:
     match content_type:
         case 'text/html':
             soup = BeautifulSoup(raw_text,'html.parser')
@@ -58,7 +79,7 @@ def parse_raw(raw_text, content_type='text/html', chunk=False) -> Optional[Itera
             body_candidates = soup.find_all(class_=re.compile(r'((b|B)ody-?(c|C)ontent|(c|C)ontent-?(a|A)rea)')) # TODO identify possible ID/class tags
             body = body_candidates[0] if len(body_candidates) > 0 else soup.body
             if chunk:
-                return soup_chunker(body)
+                return soup_chunker(body,**kwargs)
             else:
                 parsed_text = md(body.prettify())
                 # Get rid of comically long strings of consecutive newlines
@@ -82,16 +103,7 @@ def generate_questions(document : str):
     from huggingface_hub import InferenceClient
 
     messages = [
-        {"role": "system", "content": '''You are a quiz generation tool. When given a document, you will generate 10 question and answer pairs formatted as below:
-
-Q: Who is Pittsburgh named after?
-A: William Pitt
-
-Q: What famous machine learning venue had its first conference in Pittsburgh in 1980?
-A: ICML
-
-Q: What musical artist is performing at PPG Arena on October 13?
-A: Billie Eilish'''},
+        {"role": "system", "content": prompt_context},
         # TODO maybe format 
         {"role": "user", "content": re.sub(r'!\[\]\(.*\.(png|svg|jpg|gif|webp|PNG|SVG|JPG|GIF|WEBP)\)','',document)},
     ]
@@ -111,6 +123,7 @@ A: Billie Eilish'''},
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', default='https://en.wikipedia.org/')
+    parser.add_argument('--chunk-size', default=8192, type=int)
     parser.add_argument('-Q','--get-questions', action='store_true')
     args = parser.parse_args()
     text, content_type = get(args.url)
@@ -119,7 +132,7 @@ if __name__ == "__main__":
 
     if args.get_questions:
         # Crucially, we will need to chunk the data
-        document = parse_raw(text,content_type,chunk=True)
+        document = parse_raw(text,content_type,chunk=True,chunkSize=args.chunk_size)
         for subsection in document:
             with open('etc.out','a') as errf:
                 print(subsection,file=errf)
