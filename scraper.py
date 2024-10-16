@@ -1,13 +1,15 @@
-from typing import List, Optional, Tuple, Iterator
+from typing import List, Optional, Tuple, Iterator, Dict, Any
 from bs4 import BeautifulSoup
 from markdownify import markdownify as md
 from dotenv import load_dotenv
+from pypdf import PdfReader, PageObject
 import requests
 from requests.exceptions import *
 import argparse
 import sys
 import re
 import os
+import io
 
 from chunking import *
 
@@ -38,12 +40,12 @@ def get(url : str) -> Tuple[str,str]:
     try:
         res = requests.get(url)
         content_type = res.headers['Content-Type'].split(';')[0]
-        return res.text, content_type
+        return res.text, content_type, res.content
     except SSLError:
         print("SSL certificate verification failed. Retrying without verification...")
         res = requests.get(url,verify=False)
         content_type = res.headers['Content-Type'].split(';')[0]
-        return res.text, content_type
+        return res.text, content_type, res.content
 
 def wiki_cleaner(soup : BeautifulSoup):
     """
@@ -70,10 +72,10 @@ def soup_chunker(body : BeautifulSoup,chunkSize=8192) -> Iterator[str]:
 
     return SoupCan(body,stringify=to_truncated_md,max_tokens=chunkSize)
 
-def parse_raw(raw_text, content_type='text/html', chunk=False,**kwargs) -> Optional[Iterator[str] | str]:
+def parse_raw(raw_data, content_type='text/html', chunk=False,**kwargs) -> Optional[Iterator[str] | str]:
     match content_type:
         case 'text/html':
-            soup = BeautifulSoup(raw_text,'html.parser')
+            soup = BeautifulSoup(raw_data,'html.parser')
             # TODO remove irrelevant images
             # for img in soupcan.find_all('img'):
             body_candidates = soup.find_all(class_=re.compile(r'((b|B)ody-?(c|C)ontent|(c|C)ontent-?(a|A)rea)')) # TODO identify possible ID/class tags
@@ -86,6 +88,15 @@ def parse_raw(raw_text, content_type='text/html', chunk=False,**kwargs) -> Optio
                 while '\n\n\n' in parsed_text:
                     parsed_text = parsed_text.replace('\n\n\n','\n\n')
                 return parsed_text
+        
+        case 'application/pdf':
+            reader = PdfReader(io.BytesIO(raw_data))
+            #pages : List[PageObject] = reader.flattened_pages or []
+            #out = [page.get_contents().get_data() for page in pages]
+            objects : Dict[Any,Any] = reader.resolved_objects or {}
+            print(objects)
+            ...
+            raise NotImplementedError
 
         case _:
             print('Unsupported content type:',content_type)
@@ -126,22 +137,30 @@ if __name__ == "__main__":
     parser.add_argument('--chunk-size', default=8192, type=int)
     parser.add_argument('-Q','--get-questions', action='store_true')
     args = parser.parse_args()
-    text, content_type = get(args.url)
-    with open(f'raw.{content_type.split("/")[-1]}','w') as f:
-        f.write(text)
+    data = None
+    text, content_type, binary = get(args.url)
+    if 'text' in content_type:
+        data = text
+        with open(f'working/raw.{content_type.split("/")[-1]}','w') as f:
+            f.write(text)
+    else:
+        data = binary
+        with open(f'working/raw.{content_type.split("/")[-1]}','wb') as f:
+            f.write(binary)
+
 
     if args.get_questions:
         # Crucially, we will need to chunk the data
-        document = parse_raw(text,content_type,chunk=True,chunkSize=args.chunk_size)
+        document = parse_raw(data,content_type,chunk=True,chunkSize=args.chunk_size)
         for subsection in document:
-            with open('etc.out','a') as errf:
+            with open('working/etc.out','a') as errf:
                 print(subsection,file=errf)
                 print('--------',file=errf)
-            with open('qs.txt','a') as outf:
+            with open('working/qs.txt','a') as outf:
                 print(generate_questions(subsection),file=outf)
 
-    with open('out.txt','w') as f:
-        f.write(parse_raw(text,content_type))
+    with open('working/out.txt','w') as f:
+        f.write(parse_raw(data,content_type))
     
     print('Execution complete!',file=sys.stderr)
     
