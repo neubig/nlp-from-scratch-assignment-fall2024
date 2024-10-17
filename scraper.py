@@ -146,6 +146,7 @@ if __name__ == "__main__":
     parser.add_argument('--url', default='https://en.wikipedia.org/')
     parser.add_argument('--chunk-size', default=8192, type=int)
     parser.add_argument('-Q','--get-questions', action='store_true')
+    parser.add_argument('-L','--get-links', action='store_true')
     parser.add_argument('-p','--promptfile')
     args = parser.parse_args()
     data = None
@@ -190,6 +191,27 @@ if __name__ == "__main__":
 
     with open('working/out.txt','w') as f:
         f.write(parse_raw(data,content_type))
+    
+    if args.get_links and content_type == 'text/html':
+        soup = BeautifulSoup(data,'html.parser')
+        links = soup.find_all('a')
+        with open('working/links.md','a') as f:
+            print('##',args.url,file=f)
+            for link in links:
+                href = link.attrs.get('href')
+                # Ignore empty and section links
+                if href is None:
+                    continue
+                if href.startswith('#') or href.startswith('?'):
+                    continue
+                # Force link to be absolute, not relative
+                if href.startswith('//'):
+                    href = args.url.split('//')[0] + href
+                elif not href.startswith('http'):
+                    href = os.path.join(args.url,href)
+                link.attrs['href'] = href
+                print('-',MarkdownConverter().convert(link.prettify()),file=f)
+            print('-'*100,end='\n\n',file=f)
     
     print('Execution complete!',file=sys.stderr)
     
