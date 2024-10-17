@@ -31,7 +31,7 @@ class SoupCan:
         if self.current is None:
             raise StopIteration
 
-        while self.current != self.body or self.current not in self.visited:
+        while (self.current != self.body or self.current not in self.visited) and self.current is not None:
             #print('#',self.current)
             assert self.current is not None
             # If already visited, get sibling or return to parent
