@@ -1,10 +1,12 @@
-from typing import Callable, Iterator, Optional, Set
+from typing import Callable, Iterator, Optional, Set, List
 from bs4 import BeautifulSoup
 import re
 
+DEFAULT_CHUNKSIZE = 8192
+
 class SoupCan:
 
-    def __init__(self, body : BeautifulSoup, min_tokens : int = 2, max_tokens : int = 8192, stringify : Callable[[BeautifulSoup],str] = lambda s: s.get_text()):
+    def __init__(self, body : BeautifulSoup, min_tokens : int = 2, max_tokens : int = DEFAULT_CHUNKSIZE, stringify : Callable[[BeautifulSoup],str] = lambda s: s.get_text()):
         self.body = body
         self.min_tokens = min_tokens
         self.max_tokens = max_tokens
@@ -71,7 +73,35 @@ class SoupCan:
             return out
             
         self.current = None
+        raise StopIteration
         # This flag is for the language model to determine
+        # Deprecated; each chunk is sent to a new iteration of the model
         return "### END OF DOCUMENT"
 
 
+class PDFLines:
+    def __init__(self, pages : List[str], min_tokens : int = 2, max_tokens : int = DEFAULT_CHUNKSIZE):
+        self.lines = '\n'.join(pages).split('\n')
+        self.min_tokens = min_tokens
+        self.max_tokens = max_tokens or DEFAULT_CHUNKSIZE
+
+    def count_tokens(self,text):
+        # TODO enable multiple tokenization modes
+        text = text.replace('\n',' ')
+        text = re.sub(r'([.,/\'"\[\]\(\)\\<>;:&=!?$@%#*+-])',r' \1 ',text)
+        text = re.sub(r'\s+',r' ',text)
+        return len(text.split(' '))
+
+    def __make_iter(self):
+        working = ''
+        for line in self.lines:
+            if self.count_tokens(working) + self.count_tokens(line) < self.max_tokens:
+                working += '\n' + line
+            else:
+                yield working
+                working = line
+
+        yield working
+
+    def __iter__(self):
+        return self.__make_iter()

@@ -2,7 +2,8 @@ from typing import List, Optional, Tuple, Iterator, Dict, Any
 from bs4 import BeautifulSoup, Tag
 from markdownify import MarkdownConverter
 from dotenv import load_dotenv
-from pypdf import PdfReader, PageObject
+#from pypdf import PdfReader, PageObject
+import pdfplumber
 import requests
 from requests.exceptions import *
 import traceback
@@ -54,7 +55,7 @@ def wiki_cleaner(soup : BeautifulSoup):
     """
     ...
 
-def soup_chunker(body : BeautifulSoup,chunkSize=8192) -> Iterator[str]:
+def soup_chunker(body : BeautifulSoup,chunkSize=DEFAULT_CHUNKSIZE) -> Iterator[str]:
     """
     Utility for chunking the main body of a webpage into sizeable chunks
     """
@@ -98,13 +99,14 @@ def parse_raw(raw_data, content_type='text/html', chunk=False,**kwargs) -> Optio
                 return parsed_text
         
         case 'application/pdf':
-            reader = PdfReader(io.BytesIO(raw_data))
-            #pages : List[PageObject] = reader.flattened_pages or []
-            #out = [page.get_contents().get_data() for page in pages]
-            objects : Dict[Any,Any] = reader.resolved_objects or {}
-            print(objects)
-            ...
-            raise NotImplementedError
+            with pdfplumber.open(io.BytesIO(raw_data)) as pdf:
+                pages = [page.extract_text(layout=True) for page in pdf.pages]
+                #objects : Dict[Any,Any] = reader.resolved_objects or {}
+                #print([x['text'] for x in pdf.pages[0].extract_text_lines()])
+                if chunk:
+                    return iter(PDFLines(pages,max_tokens=kwargs['chunkSize']))
+                else:
+                    return '\n'.join(pages)
 
         case _:
             print('Unsupported content type:',content_type)
@@ -144,7 +146,7 @@ def generate_questions(document : str, prompt : Optional[str] = None):
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument('--url', default='https://en.wikipedia.org/')
-    parser.add_argument('--chunk-size', default=8192, type=int)
+    parser.add_argument('--chunk-size', default=DEFAULT_CHUNKSIZE, type=int)
     parser.add_argument('-Q','--get-questions', action='store_true')
     parser.add_argument('-L','--get-links', action='store_true')
     parser.add_argument('-p','--promptfile')
