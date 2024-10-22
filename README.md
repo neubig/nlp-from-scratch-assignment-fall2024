@@ -246,9 +246,15 @@ To make the assignment accessible to everyone,
 
 If you have any questions about whether a model or data is allowed, please ask on Piazza.
 
+## FAQ
++ Q) "*There are lots of links and subpages in the webpages, what is exactly the scope for this assignment?*"
+    - A) The scope includes the links on the readme and their descendant pages that are specifically relevant to the topics we have listed (e.g. history, events, music, food, sports). In addition, you may also include some PDFs that can be reached from those websites, even if they are not technically descendant pages, e.g., See the links under the "Regulations" column of the table. Use your best judgment to determine whether a webpage is relevant—a good heuristic is whether we can ask questions about factual content included in those pages.
++ Q) "*Is manual scraping prohibited?*"
+    - A) Manual scraping is not prohibited. To what extent you would perform the task manually is up to you.
+
 ## Acknowledgements
 
-This assignment was based on the the [Spring 2024 version of this assignment](https://github.com/neubig/nlp-from-scratch-assignment-spring2024).
+This assignment was based on the [Spring 2024 version of this assignment](https://github.com/neubig/nlp-from-scratch-assignment-spring2024).
 
 ## References
 
