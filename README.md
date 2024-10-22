@@ -159,7 +159,9 @@ Finally, you will run your systems on our test set (questions only) and submit y
 
 ### Unseen test set
 
-This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about Pittsburgh and CMU. Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
+This test set will be curated by the course staff and will evaluate your system's ability to respond to a variety of questions about Pittsburgh and CMU (`data/test_questions.csv`). Because the goal of this assignment is not to perform hyperparameter optimization on this private test set, we ask you to not overfit to this test set. You are allowed to submit up to *three* output files (`system_outputs/system_output_{1,2,3}.txt`). We will use the best performing file for grading.
+
+Note: `data/test_questions.csv` is the only file with `.csv` extension and the column name "Question" in the first line. Each line contains one question. Please ignore the first column-name line.
 
 ### Evaluation metrics
 
